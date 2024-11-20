@@ -33,8 +33,8 @@ class ExtraActionButton(CalcButton):
 class AddExtraActionButton(CalcButton):
     def __init__(self, text, button_clicked):
         CalcButton.__init__(self, text, button_clicked)
-        self.bgcolor = ft.colors.BLACK38
-        self.color = ft.colors.BLACK
+        self.bgcolor = ft.colors.BLUE_GREY_900
+        self.color = ft.colors.WHITE
 
 class CalculatorApp(ft.Container):
     # application's root control (i.e. "view") containing all other controls
@@ -67,6 +67,7 @@ class CalculatorApp(ft.Container):
                 ),
                 ft.Row(
                     controls=[
+                        AddExtraActionButton(text="x³", button_clicked=self.button_clicked),
                         DigitButton(text="7", button_clicked=self.button_clicked),
                         DigitButton(text="8", button_clicked=self.button_clicked),
                         DigitButton(text="9", button_clicked=self.button_clicked),
@@ -75,6 +76,7 @@ class CalculatorApp(ft.Container):
                 ),
                 ft.Row(
                     controls=[
+                        AddExtraActionButton(text="xⁿ", button_clicked=self.button_clicked),
                         DigitButton(text="4", button_clicked=self.button_clicked),
                         DigitButton(text="5", button_clicked=self.button_clicked),
                         DigitButton(text="6", button_clicked=self.button_clicked),
@@ -83,6 +85,7 @@ class CalculatorApp(ft.Container):
                 ),
                 ft.Row(
                     controls=[
+                        AddExtraActionButton(text="10ⁿ", button_clicked=self.button_clicked),
                         DigitButton(text="1", button_clicked=self.button_clicked),
                         DigitButton(text="2", button_clicked=self.button_clicked),
                         DigitButton(text="3", button_clicked=self.button_clicked),
@@ -91,6 +94,7 @@ class CalculatorApp(ft.Container):
                 ),
                 ft.Row(
                     controls=[
+                        AddExtraActionButton(text="1/x", button_clicked=self.button_clicked),
                         DigitButton(
                             text="0", expand=2, button_clicked=self.button_clicked
                         ),
@@ -145,6 +149,28 @@ class CalculatorApp(ft.Container):
                     self.format_number(abs(float(self.result.value)))
                 )
 
+        elif data in ("x²"):
+            self.result.value = self.format_number(float(self.result.value) ** 2)
+            self.reset()
+
+        elif data in ("x³"):
+            self.result.value = self.format_number(float(self.result.value) ** 3)
+            self.reset()
+
+        elif data in ("xⁿ"):
+            self.operand1 = float(self.result.value)
+            self.operator = "^"
+            self.new_operand = True
+            self.result.value = "0"
+
+        elif data in ("10ⁿ"):
+            self.result.value = self.format_number(10 ** float(self.result.value))
+            self.reset()
+
+        elif data in ("1/x"):
+            self.result.value = self.format_number(1 / float(self.result.value))
+            self.reset()
+
         self.update()
 
     def format_number(self, num):
@@ -169,6 +195,9 @@ class CalculatorApp(ft.Container):
                 return "Error"
             else:
                 return self.format_number(operand1 / operand2)
+            
+        elif operator == "^":
+            return self.format_number(operand1 ** operand2)
 
     def reset(self):
         self.operator = "+"
